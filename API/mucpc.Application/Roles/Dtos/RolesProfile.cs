@@ -9,6 +9,8 @@ public class RolesProfile : Profile
     public RolesProfile()
     {
         CreateMap<Role, RoleDto>();
+        CreateMap<RoleDto, Role>();
+        //CreateMap<CreateRoleCommand, Role>();
         CreateMap<CreateRoleDto, Role>();
     }
 }

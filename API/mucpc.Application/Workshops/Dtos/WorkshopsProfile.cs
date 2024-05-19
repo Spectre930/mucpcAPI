@@ -9,6 +9,7 @@ public class WorkshopsProfile : Profile
     public WorkshopsProfile()
     {
         CreateMap<WorkShop, WorkshopDto>();
+        CreateMap<WorkshopDto, WorkShop>();
         CreateMap<CreateWorkshopDto, WorkShop>();
     }
 }

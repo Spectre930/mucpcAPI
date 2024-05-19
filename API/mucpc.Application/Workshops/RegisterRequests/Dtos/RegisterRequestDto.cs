@@ -2,8 +2,6 @@
 using mucpc.Application.Students.Dtos;
 using mucpc.Application.Workshops.Dtos;
 
-
-
 namespace mucpc.Application.Workshops.RegisterRequests.Dtos;
 
 public class RegisterRequestDto

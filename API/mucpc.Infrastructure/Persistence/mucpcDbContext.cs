@@ -34,7 +34,9 @@ internal class mucpcDbContext(DbContextOptions<mucpcDbContext> options) : DbCont
             .HasForeignKey(qr => qr.FormResponseId)
             .OnDelete(DeleteBehavior.Cascade);
 
-
+        modelBuilder.Entity<Role>()
+            .HasIndex(r => r.RoleName)
+            .IsUnique();
         modelBuilder.Entity<Instructor>()
              .HasIndex(c => c.Email)
              .IsUnique();

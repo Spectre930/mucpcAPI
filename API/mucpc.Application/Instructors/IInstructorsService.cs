@@ -11,6 +11,6 @@ public interface IInstructorsService
     Task UpdateInstructor(InstructorDto instructor);
     Task DeleteInstructor(long id);
     Task<IEnumerable<WorkshopDto>> GetWorkShops(long InstructorId);
-    Task<double> GetInstructorRatingInAWorkShop(long WorkShopId);
+    Task<double?> GetInstructorRatingInAWorkShop(long WorkShopId);
     Task<double?> GetOverAllInstructorRating(long InstructorId);
 }

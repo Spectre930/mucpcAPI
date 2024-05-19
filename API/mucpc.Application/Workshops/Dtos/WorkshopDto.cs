@@ -1,9 +1,4 @@
-﻿using mucpc.Application.Instructors.Dtos;
-using mucpc.Application.Students.Dtos;
-using mucpc.Application.Workshops.RegisterRequests.Dtos;
-using System.Text.Json.Serialization;
-
-namespace mucpc.Application.Workshops.Dtos;
+﻿namespace mucpc.Application.Workshops.Dtos;
 
 public class WorkshopDto
 {
@@ -27,9 +22,4 @@ public class WorkshopDto
     public double? Rating { get; set; }
 
     public long? InstructorId { get; set; }
-    [JsonIgnore]
-    public InstructorDto? Instructor { get; set; }
-
-    public ICollection<StudentDto>? Students { get; }
-    public ICollection<RegisterRequestDto>? RegisterRequests { get; }
 }

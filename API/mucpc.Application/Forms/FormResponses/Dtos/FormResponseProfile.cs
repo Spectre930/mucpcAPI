@@ -9,6 +9,8 @@ public class FormResponseProfile : Profile
     public FormResponseProfile()
     {
         CreateMap<FormResponse, FormResponseDto>();
-        CreateMap<CreateFormResponseDto, FormResponse>();
+        CreateMap<FormResponseDto, FormResponse>();
+        CreateMap<CreateFormResponseCommand, FormResponse>();
+
     }
 }

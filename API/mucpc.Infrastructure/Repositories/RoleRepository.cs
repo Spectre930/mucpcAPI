@@ -1,19 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using mucpc.Dmain.DTO;
 using mucpc.Dmain.Repositories;
 using mucpc.Domain.Entities;
 using MUCPC.Infrastructure.Persistence;
 
 namespace mucpc.Infrastructure.Repositories;
 
-internal class RoleRepository : Repository<Role>, IRoleRepository
+internal class RoleRepository(mucpcDbContext _db)
+    : Repository<Role>(_db),
+    IRoleRepository
 {
-    private readonly mucpcDbContext _db;
-    public RoleRepository(mucpcDbContext db) : base(db)
-    {
-        _db = db;
-    }
-
     public async Task AddRole(Role role)
     {
         var obj = await _db.Roles.Where(r => r.RoleName == role.RoleName).FirstOrDefaultAsync();
@@ -38,7 +33,7 @@ internal class RoleRepository : Repository<Role>, IRoleRepository
         var dbObj = await _db.Roles.FindAsync(role.Id) ?? throw new Exception("Role Not Found!");
 
         dbObj.RoleName = role.RoleName;
-        _db.Roles.Update(role);
+        _db.Roles.Update(dbObj);
         await _db.SaveChangesAsync();
     }
 

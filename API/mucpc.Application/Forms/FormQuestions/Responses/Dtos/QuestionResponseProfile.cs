@@ -7,6 +7,7 @@ public class QuestionResponseProfile : Profile
     public QuestionResponseProfile()
     {
         CreateMap<QuestionResponse, QuestionResponseDto>();
+        CreateMap<QuestionResponseDto, QuestionResponse>();
         CreateMap<CreateQuestionResponseDto, QuestionResponse>();
     }
 }

@@ -10,15 +10,9 @@ using System.Security.Claims;
 
 namespace mucpc.Infrastructure.Repositories;
 
-internal class AppUserRepository : Repository<AppUser>, IAppUserRepository
+internal class AppUserRepository(mucpcDbContext _db,
+    IConfiguration _configuration) : Repository<AppUser>(_db), IAppUserRepository
 {
-    private readonly mucpcDbContext _db;
-    private readonly IConfiguration _configuration;
-    public AppUserRepository(mucpcDbContext db, IConfiguration configuration) : base(db)
-    {
-        _configuration = configuration;
-        _db = db;
-    }
 
     public async Task AddUser(AppUser user)
     {
@@ -55,14 +49,14 @@ internal class AppUserRepository : Repository<AppUser>, IAppUserRepository
 
     }
 
-    public async Task<string> Login(LoginDto dto)
+    public async Task<string> Login(string email, string password)
     {
         var user = await _db.AppUsers
            .Include(u => u.Role)
-           .Where(u => u.Email == dto.Email)
+           .Where(u => u.Email == email)
            .FirstOrDefaultAsync();
 
-        if (!CheckPassword(dto.Password, user.Password) || user is null)
+        if (!CheckPassword(password, user.Password) || user is null)
             throw new Exception("Incorrect Email or Password!");
 
         return await CreateToken(user);
@@ -78,12 +72,8 @@ internal class AppUserRepository : Repository<AppUser>, IAppUserRepository
 
     public async Task UpdateUser(AppUser user)
     {
-        var obj = await _db.AppUsers.FindAsync(user.Id) ?? throw new Exception("User Not Found!");
-
-        obj.Email = user.Email;
-        obj.RoleId = user.RoleId;
-
-        _db.AppUsers.Update(obj);
+        _db.AppUsers.Update(user);
+        await _db.SaveChangesAsync();
     }
 
     public async Task<bool> UserExists(string email)
@@ -123,11 +113,6 @@ internal class AppUserRepository : Repository<AppUser>, IAppUserRepository
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
-    public async Task<AppUser> GetById(long id)
-    {
-        return await _db.AppUsers.FindAsync(id) ?? throw new Exception("User Not Found!");
     }
 
     public async Task DeleteUser(long id)

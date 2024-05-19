@@ -49,7 +49,7 @@ internal class InstructorsService(IInstructorRepository _instructorRepository, I
         return _mapper.Map<InstructorDto>(instructor);
     }
 
-    public async Task<double> GetInstructorRatingInAWorkShop(long WorkShopId)
+    public async Task<double?> GetInstructorRatingInAWorkShop(long WorkShopId)
     {
         try
         {

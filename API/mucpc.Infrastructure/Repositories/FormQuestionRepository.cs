@@ -3,16 +3,16 @@ using mucpc.Application.Forms.FormQuestions.Dtos;
 using mucpc.Dmain.Repositories;
 using mucpc.Domain.Entities;
 using MUCPC.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace mucpc.Infrastructure.Repositories;
 
 internal class FormQuestionRepository(mucpcDbContext _db) : IFormQuestionRepository
 {
+    public async Task<FormQuestion> GetById(long Id)
+    {
+        return await _db.FormQuestions.FindAsync(Id) ?? throw new Exception("question not found!");
+    }
     public async Task DeleteQuestion(long Id)
     {
         var question = await _db.FormQuestions.FindAsync(Id);
@@ -29,18 +29,7 @@ internal class FormQuestionRepository(mucpcDbContext _db) : IFormQuestionReposit
 
     public async Task EditQuestion(FormQuestion formQuestion)
     {
-        var question = await _db.FormQuestions.FindAsync(formQuestion.Id);
-
-        if (question is null)
-        {
-            throw new Exception("Question not found");
-        }
-
-        question.Question = formQuestion.Question;
-        question.Type = formQuestion.Type;
-        question.Options = formQuestion.Options;
-
-        _db.FormQuestions.Update(question);
+        _db.FormQuestions.Update(formQuestion);
         await _db.SaveChangesAsync();
     }
 

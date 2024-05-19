@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.Configure<GmailSettings>(builder.Configuration.GetSection("Gmail"));
 //register services
 builder.Services.AddApplication();
 //register DbContext

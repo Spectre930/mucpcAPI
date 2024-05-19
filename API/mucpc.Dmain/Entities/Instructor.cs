@@ -21,6 +21,6 @@ public class Instructor
     public string DegreeLevel { get; set; }
     public double? Rating { get; set; }
 
-    public ICollection<WorkShop> WorkShops { get; set; }
+    public ICollection<WorkShop>? WorkShops { get; set; }
 
 }

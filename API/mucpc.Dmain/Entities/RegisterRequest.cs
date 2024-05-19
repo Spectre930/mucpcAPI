@@ -12,7 +12,7 @@ public class RegisterRequest
     public long FormResponseId { get; set; }
     public FormResponse FormResponse { get; set; }
     public bool isAccepted { get; set; } = false;
-    public string? Status { get; set; }
+    public string? Status { get; set; } = "Pending";
     public long WorkShopId { get; set; }
     public WorkShop WorkShop { get; set; }
 

@@ -1,10 +1,4 @@
-﻿using mucpc.Application.Forms.FormQuestions.Dtos;
-using mucpc.Application.Forms.FormResponses.Dtos;
-using mucpc.Application.Workshops.Dtos;
-using mucpc.Domain.Entities;
-
-
-namespace mucpc.Application.Forms.Dtos;
+﻿namespace mucpc.Application.Forms.Dtos;
 
 public class FormDto
 {
@@ -14,7 +8,5 @@ public class FormDto
     public bool RegistrationForm { get; set; }
     public bool EvaluationForm { get; set; }
     public long WorkShopId { get; set; }
-    public WorkshopDto WorkShop { get; set; }
-    public ICollection<FormQuestionDto> FormQuestions { get; set; }
-    public ICollection<FormResponseDto> FormResponses { get; set; }
+
 }

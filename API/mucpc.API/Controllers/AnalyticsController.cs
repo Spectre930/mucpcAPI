@@ -1,18 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using mucpc.Application.Analytics;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using mucpc.Application.Analytics.Queries.GetAcademicYears;
+using mucpc.Application.Analytics.Queries.GetHighestRatedInstructor;
+using mucpc.Application.Analytics.Queries.GetHighestRatedInstructorInAnAcademicYear;
+using mucpc.Application.Analytics.Queries.GetHighestRatedWorkshop;
+using mucpc.Application.Analytics.Queries.GetHighestRatedWorkshopInAnAcademicYear;
+using mucpc.Application.Analytics.Queries.NumberOfInstructors;
+using mucpc.Application.Analytics.Queries.NumberOfStudents;
+using mucpc.Application.Analytics.Queries.NumberOfWorkShops;
+using mucpc.Application.Analytics.Queries.NumberOfWorkShopsInAnAcademicYear;
 
 namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AnalyticsController(IAnalyticsService _analyticsService) : ControllerBase
+public class AnalyticsController(Mediator _mediator) : ControllerBase
 {
     [HttpGet("academicYears")]
     public async Task<IActionResult> GetAcademicYears()
     {
         try
         {
-            var years = await _analyticsService.GetAcademicYears();
+            var years = await _mediator.Send(new GetAcademicYearsQuery());
             return Ok(years);
         }
         catch (Exception ex)
@@ -26,7 +35,7 @@ public class AnalyticsController(IAnalyticsService _analyticsService) : Controll
     {
         try
         {
-            var total = await _analyticsService.NumberOfWorkShops();
+            var total = await _mediator.Send(new NumberOfWorkShopsQuery());
             return Ok(total);
         }
         catch (Exception ex)
@@ -40,7 +49,7 @@ public class AnalyticsController(IAnalyticsService _analyticsService) : Controll
     {
         try
         {
-            var total = await _analyticsService.NumberOfInstructors();
+            var total = await _mediator.Send(new NumberOfInstructorsQuery());
             return Ok(total);
         }
         catch (Exception ex)
@@ -54,7 +63,7 @@ public class AnalyticsController(IAnalyticsService _analyticsService) : Controll
     {
         try
         {
-            var workshop = await _analyticsService.GetHighestRatedWorkshop();
+            var workshop = await _mediator.Send(new GetHighestRatedWorkshopQuery());
             return Ok(workshop);
         }
         catch (Exception ex)
@@ -68,7 +77,7 @@ public class AnalyticsController(IAnalyticsService _analyticsService) : Controll
     {
         try
         {
-            var instructor = await _analyticsService.GetHighestRatedInstructor();
+            var instructor = await _mediator.Send(new GetHighestRatedInstructorQuery());
             return Ok(instructor);
         }
         catch (Exception ex)
@@ -82,7 +91,7 @@ public class AnalyticsController(IAnalyticsService _analyticsService) : Controll
     {
         try
         {
-            var workshop = await _analyticsService.GetHighestRatedWorkshopInAnAcademicYear(year);
+            var workshop = await _mediator.Send(new GetHighestRatedWorkshopInAnAcademicYearQuery(year));
             return Ok(workshop);
         }
         catch (Exception ex)
@@ -96,7 +105,7 @@ public class AnalyticsController(IAnalyticsService _analyticsService) : Controll
     {
         try
         {
-            var instructor = await _analyticsService.GetHighestRatedInstructorInAnAcademicYear(year);
+            var instructor = await _mediator.Send(new GetHighestRatedInstructorInAnAcademicYearQuery(year));
             return Ok(instructor);
         }
         catch (Exception ex)
@@ -111,7 +120,7 @@ public class AnalyticsController(IAnalyticsService _analyticsService) : Controll
     {
         try
         {
-            var total = await _analyticsService.NumberOfWorkShopsInAnAcademicYear(year);
+            var total = await _mediator.Send(new NumberOfWorkShopsInAnAcademicYearQuery(year));
             return Ok(total);
         }
         catch (Exception ex)
@@ -125,7 +134,7 @@ public class AnalyticsController(IAnalyticsService _analyticsService) : Controll
     {
         try
         {
-            var total = await _analyticsService.NumberOfStudents();
+            var total = await _mediator.Send(new NumberOfStudentsQuery());
 
             return Ok(total);
         }

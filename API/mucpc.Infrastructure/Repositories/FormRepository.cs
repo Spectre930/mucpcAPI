@@ -7,15 +7,19 @@ using MUCPC.Infrastructure.Persistence;
 
 namespace mucpc.Infrastructure.Repositories;
 
-internal class FormRepository : Repository<Form>, IFormRepository
+internal class FormRepository(mucpcDbContext _db) : Repository<Form>(_db), IFormRepository
 {
-    private readonly mucpcDbContext _db;
-    public FormRepository(mucpcDbContext db) : base(db)
-    {
-        _db = db;
-    }
     public async Task<long> AddForm(Form dto)
     {
+        if (dto.EvaluationForm & dto.RegistrationForm || !dto.RegistrationForm & !dto.EvaluationForm)
+        {
+            throw new Exception("Form must be either Evaluation or Registration");
+        }
+
+        var form = await _db.Forms.Where(f => f.WorkShopId == dto.WorkShopId && f.RegistrationForm == dto.RegistrationForm && f.EvaluationForm == dto.EvaluationForm).FirstOrDefaultAsync();
+
+        if (form is not null)
+            throw new Exception("Form already exists");
 
         await _db.Forms.AddAsync(dto);
         await _db.SaveChangesAsync();
@@ -25,18 +29,7 @@ internal class FormRepository : Repository<Form>, IFormRepository
 
     public async Task UpdateForm(Form form)
     {
-        var obj = await _db.Forms.FirstOrDefaultAsync(x => x.Id == form.Id);
-        if (obj == null)
-        {
-            throw new Exception("Form Not Found");
-        }
-
-        obj.Title = form.Title;
-        obj.Description = form.Description;
-        obj.WorkShopId = form.WorkShopId;
-        obj.EvaluationForm = form.EvaluationForm;
-        obj.RegistrationForm = form.RegistrationForm;
-        _db.Forms.Update(obj);
+        _db.Forms.Update(form);
         await _db.SaveChangesAsync();
     }
 
@@ -56,6 +49,7 @@ internal class FormRepository : Repository<Form>, IFormRepository
 
     public async Task<FormAnalytics> GetFormAnalytics(long id)
     {
+        var form = await _db.Forms.FindAsync(id) ?? throw new Exception("Form Not Found!");
         var spResponse = await _db.Database
             .SqlQueryRaw<SpModel>($@"EXEC [dbo].[sp_FormAnalytics] @formId = {id}")
             .ToListAsync();

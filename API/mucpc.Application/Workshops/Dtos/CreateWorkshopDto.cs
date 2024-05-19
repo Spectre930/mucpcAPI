@@ -8,7 +8,7 @@ namespace mucpc.Application.Workshops.Dtos
 {
     public class CreateWorkshopDto
     {
-        public string Number { get; set; }
+        public string? Number { get; set; }
         public string? Semester { get; set; }
         public int? AcedemicYear { get; set; }
         public string Title { get; set; }

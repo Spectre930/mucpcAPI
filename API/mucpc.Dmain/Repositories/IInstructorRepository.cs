@@ -10,6 +10,6 @@ public interface IInstructorRepository : IRepository<Instructor>
     Task UpdateInstructor(Instructor instructor);
     Task DeleteInstructor(long id);
     Task<IEnumerable<WorkShop>> GetWorkShops(long InstructorId);
-    Task<double> GetInstructorRatingInAWorkShop(long WorkShopId);
+    Task<double?> GetInstructorRatingInAWorkShop(long WorkShopId);
     Task<double?> GetOverAllInstructorRating(long InstructorId);
 }

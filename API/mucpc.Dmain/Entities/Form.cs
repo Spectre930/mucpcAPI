@@ -12,7 +12,7 @@ public class Form
     public bool RegistrationForm { get; set; }
     public bool EvaluationForm { get; set; }
     public long WorkShopId { get; set; }
-    public WorkShop WorkShop { get; set; }
-    public ICollection<FormQuestion> FormQuestions { get; set; }
-    public ICollection<FormResponse> FormResponses { get; set; }
+    public WorkShop? WorkShop { get; set; }
+    public ICollection<FormQuestion>? FormQuestions { get; set; }
+    public ICollection<FormResponse>? FormResponses { get; set; }
 }

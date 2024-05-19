@@ -2,7 +2,7 @@
 
 namespace mucpc.Application.Forms.FormResponses.Dtos;
 
-public class CreateFormResponseDto
+public class CreateFormResponseCommand
 {
     public long FormId { get; set; }
     public long StudentId { get; set; }
