@@ -1,4 +1,6 @@
-﻿namespace mucpc.Application.Instructors.Dtos;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace mucpc.Application.Instructors.Dtos;
 
 public class CreateInstructorDto
 {
@@ -6,9 +8,11 @@ public class CreateInstructorDto
     public string MiddleName { get; set; }
     public string LastName { get; set; }
     public string PhoneNumber { get; set; }
-    public string Email { get; set; }
-    public string Address { get; set; }
-    public int YearsOfExpertise { get; set; }
-    public string Major { get; set; }
-    public string DegreeLevel { get; set; }
+
+    [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email format.")]
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+    public int? YearsOfExpertise { get; set; }
+    public string? Major { get; set; }
+    public string? DegreeLevel { get; set; }
 }

@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
+using mucpc.Application.Instructors.Commans.AddInstructor;
 using mucpc.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace mucpc.Application.Instructors.Dtos;
 
@@ -14,5 +10,7 @@ public class InstructorsProfile : Profile
     {
         CreateMap<Instructor, InstructorDto>();
         CreateMap<CreateInstructorDto, Instructor>();
+        CreateMap<AddInstructorCommand, Instructor>();
+
     }
 }

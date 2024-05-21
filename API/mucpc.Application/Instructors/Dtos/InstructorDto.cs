@@ -17,7 +17,6 @@ public class InstructorDto
     public int YearsOfExpertise { get; set; }
     public string Major { get; set; }
     public string DegreeLevel { get; set; }
-    public double? Rating { get; set; } 
-       
-    public ICollection<WorkshopDto>? WorkShops { get; set; }
+    public double? Rating { get; set; }
+
 }

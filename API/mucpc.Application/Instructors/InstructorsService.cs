@@ -9,6 +9,18 @@ namespace mucpc.Application.Instructors;
 
 internal class InstructorsService(IInstructorRepository _instructorRepository, IMapper _mapper) : IInstructorsService
 {
+    public async Task<IEnumerable<InstructorDto>> GetAll()
+    {
+        var instructors = await _instructorRepository.GetAllAsync();
+        return _mapper.Map<IEnumerable<InstructorDto>>(instructors);
+    }
+
+    public async Task<InstructorDto> GetById(long id)
+    {
+        var instructor = await _instructorRepository.GetFirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("instructor not found!");
+
+        return _mapper.Map<InstructorDto>(instructor);
+    }
 
     public async Task AddInstructor(CreateInstructorDto dto)
     {
@@ -36,18 +48,6 @@ internal class InstructorsService(IInstructorRepository _instructorRepository, I
         }
     }
 
-    public async Task<IEnumerable<InstructorDto>> GetAll()
-    {
-        var instructors = await _instructorRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<InstructorDto>>(instructors);
-    }
-
-    public async Task<InstructorDto> GetById(long id)
-    {
-        var instructor = await _instructorRepository.GetFirstOrDefaultAsync(x => x.Id == id) ?? throw new Exception("instructor not found!");
-
-        return _mapper.Map<InstructorDto>(instructor);
-    }
 
     public async Task<double?> GetInstructorRatingInAWorkShop(long WorkShopId)
     {

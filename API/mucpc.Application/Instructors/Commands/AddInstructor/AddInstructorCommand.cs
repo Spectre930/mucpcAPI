@@ -1,13 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using MediatR;
+using System.ComponentModel.DataAnnotations;
 
-namespace mucpc.Domain.Entities;
+namespace mucpc.Application.Instructors.Commands.AddInstructor;
 
-public class Instructor
+public class AddInstructorCommand : IRequest
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public long Id { get; set; }
     public string FirstName { get; set; }
     public string MiddleName { get; set; }
     public string LastName { get; set; }
@@ -19,8 +16,4 @@ public class Instructor
     public int? YearsOfExpertise { get; set; }
     public string? Major { get; set; }
     public string? DegreeLevel { get; set; }
-    public double? Rating { get; set; }
-
-    public ICollection<WorkShop>? WorkShops { get; set; }
-
 }
