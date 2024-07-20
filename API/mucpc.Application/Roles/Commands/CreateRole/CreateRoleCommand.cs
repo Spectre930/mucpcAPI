@@ -1,8 +1,8 @@
-﻿//using MediatR;
+﻿using MediatR;
 
-//namespace mucpc.Application.Roles.Commands.CreateRole;
+namespace mucpc.Application.Roles.Commands.CreateRole;
 
-//public class CreateRoleCommand : IRequest<int>
-//{
-//    public string RoleName { get; set; }
-//}
+public class CreateRoleCommand : IRequest
+{
+    public string RoleName { get; set; }
+}

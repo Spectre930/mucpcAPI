@@ -1,19 +1,25 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using mucpc.Application.Roles;
+using mucpc.Application.Roles.Commands.CreateRole;
+using mucpc.Application.Roles.Commands.DeleteRole;
+using mucpc.Application.Roles.Commands.UpdateRole;
 using mucpc.Application.Roles.Dtos;
+using mucpc.Application.Roles.Queries.GetAllRoles;
+using mucpc.Application.Roles.Queries.GetById;
 using mucpc.Domain.Entities;
 
 namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class RolesController(IRolesService _rolesService) : ControllerBase
+public class RolesController(IMediator _mediator) : ControllerBase
 {
     [HttpGet("getall")]
     public async Task<IActionResult> GetAllRoles()
     {
-        var roles = await _rolesService.GetAllRoles();
+        var roles = await _mediator.Send(new GetAllRolesQuery());
         return Ok(roles);
     }
 
@@ -22,7 +28,7 @@ public class RolesController(IRolesService _rolesService) : ControllerBase
     {
         try
         {
-            var role = await _rolesService.GetById(roleId);
+            var role = await _mediator.Send(new GetByIdQuery(roleId));
 
             return Ok(role);
         }
@@ -33,11 +39,11 @@ public class RolesController(IRolesService _rolesService) : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> Create(CreateRoleDto dto)
+    public async Task<IActionResult> Create(CreateRoleCommand dto)
     {
         try
         {
-            await _rolesService.AddRole(dto);
+            await _mediator.Send(dto);
             return Ok();
         }
         catch (Exception ex)
@@ -47,11 +53,11 @@ public class RolesController(IRolesService _rolesService) : ControllerBase
     }
 
     [HttpPut("update")]
-    public async Task<IActionResult> Update([FromBody] RoleDto role)
+    public async Task<IActionResult> Update([FromBody] UpdateRoleCommand role)
     {
         try
         {
-            await _rolesService.UpdateRole(role);
+            await _mediator.Send(role);
             return Ok();
         }
         catch (Exception ex)
@@ -65,7 +71,7 @@ public class RolesController(IRolesService _rolesService) : ControllerBase
     {
         try
         {
-            await _rolesService.DeleteRole(roleId);
+            await _mediator.Send(new DeleteRoleCommand(roleId));
             return Ok();
         }
         catch (Exception ex)

@@ -92,20 +92,8 @@ internal class InstructorRepository(mucpcDbContext _db) : Repository<Instructor>
 
     public async Task UpdateInstructor(Instructor instructor)
     {
-        var i = await GetFirstOrDefaultAsync(x => x.Id == instructor.Id) ?? throw new Exception("Instructor Not Found!");
-
-        i.FirstName = instructor.FirstName;
-        i.MiddleName = instructor.MiddleName;
-        i.LastName = instructor.LastName;
-        i.PhoneNumber = instructor.PhoneNumber;
-        i.Email = instructor.Email;
-        i.Address = instructor.Address;
-        i.YearsOfExpertise = instructor.YearsOfExpertise;
-        i.Major = instructor.Major;
-        i.DegreeLevel = instructor.DegreeLevel; ;
-
-        _db.Instructors.Update(i);
-
+        _db.Instructors.Update(instructor);
+        await _db.SaveChangesAsync();
     }
 
 }

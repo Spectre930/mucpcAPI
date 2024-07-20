@@ -77,11 +77,7 @@ internal class StudentRepository
 
     public async Task UpdateStudent(Student student)
     {
-        var obj = await _db.Students.Include(s => s.User).FirstOrDefaultAsync(s => s.UserId == student.UserId) ?? throw new Exception("User Not Found!");
-
-        _db.Students.Update(obj);
+        _db.Students.Update(student);
         await _db.SaveChangesAsync();
-
-
     }
 }

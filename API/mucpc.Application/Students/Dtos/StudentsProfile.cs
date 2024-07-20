@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using mucpc.Application.Students.Commands.AddStudent;
+using mucpc.Application.Students.Commands.UpdateStudent;
 using mucpc.Domain.Entities;
-using System.Xml.Serialization;
 
 namespace mucpc.Application.Students.Dtos;
 
@@ -11,6 +12,7 @@ public class StudentsProfile : Profile
         CreateMap<Student, StudentDto>();
         CreateMap<StudentDto, Student>();
 
-        CreateMap<CreateStudentDto, Student>();
+        CreateMap<AddStudentCommand, Student>();
+        CreateMap<UpdateStudentCommand, Student>();
     }
 }

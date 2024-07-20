@@ -30,10 +30,7 @@ internal class RoleRepository(mucpcDbContext _db)
 
     public async Task UpdateRole(Role role)
     {
-        var dbObj = await _db.Roles.FindAsync(role.Id) ?? throw new Exception("Role Not Found!");
-
-        dbObj.RoleName = role.RoleName;
-        _db.Roles.Update(dbObj);
+        _db.Roles.Update(role);
         await _db.SaveChangesAsync();
     }
 

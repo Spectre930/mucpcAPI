@@ -119,31 +119,10 @@ internal class WorkshopRepository(mucpcDbContext _db,
 
     public async Task UpdateWorkShop(WorkShop workShop)
     {
-        var w = await GetFirstOrDefaultAsync(x => x.Id == workShop.Id);
-
-        if (w == null)
-        {
-            throw new Exception("WorkShop Not Found!");
-        }
-        else
-        {
-            w.Title = workShop.Title;
-            w.Description = workShop.Description;
-            w.NumberOfHours = workShop.NumberOfHours;
-            w.TargetedFaculties = workShop.TargetedFaculties;
-            w.Price = workShop.Price;
-            w.Duration = workShop.Duration;
-            w.Objectives = workShop.Objectives;
-            w.DeliveryType = workShop.DeliveryType;
-            w.InstructorId = workShop.InstructorId;
-            w.DateAndTime = workShop.DateAndTime;
-            w.Speaker = workShop.Speaker;
-            w.OrganizedBy = workShop.OrganizedBy;
-            w.RegistrationLink = workShop.RegistrationLink;
-            w.MaxNumberOfAttendees = workShop.MaxNumberOfAttendees;
-            _db.WorkShops.Update(w);
-        }
+        _db.WorkShops.Update(workShop);
+        await _db.SaveChangesAsync();
     }
+
 
     public (int academicYear, string semester) GetRecent()
     {

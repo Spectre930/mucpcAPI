@@ -1,10 +1,9 @@
-﻿using mucpc.Application.AppUsers.Admins.Commands.CreateAdmin;
-using mucpc.Application.AppUsers.Dtos;
-using System.ComponentModel.DataAnnotations;
+﻿using MediatR;
+using mucpc.Application.AppUsers.Admins.Commands.CreateAdmin;
 
-namespace mucpc.Application.Students.Dtos;
+namespace mucpc.Application.Students.Commands.AddStudent;
 
-public class CreateStudentDto
+public class AddStudentCommand : IRequest
 {
     public CreateAppUserCommand user { get; set; }
     public string? FirstName { get; set; }
