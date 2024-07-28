@@ -1,19 +1,17 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using mucpc.Application.Roles;
 using mucpc.Application.Roles.Commands.CreateRole;
 using mucpc.Application.Roles.Commands.DeleteRole;
 using mucpc.Application.Roles.Commands.UpdateRole;
-using mucpc.Application.Roles.Dtos;
 using mucpc.Application.Roles.Queries.GetAllRoles;
 using mucpc.Application.Roles.Queries.GetById;
-using mucpc.Domain.Entities;
 
 namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Manager,Staff")]
 public class RolesController(IMediator _mediator) : ControllerBase
 {
     [HttpGet("getall")]

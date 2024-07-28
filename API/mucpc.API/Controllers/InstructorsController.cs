@@ -1,10 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using mucpc.Application.Instructors;
 using mucpc.Application.Instructors.Commands.AddInstructor;
 using mucpc.Application.Instructors.Commands.DeleteInstructor;
 using mucpc.Application.Instructors.Commands.UpdateInstructor;
-using mucpc.Application.Instructors.Dtos;
 using mucpc.Application.Instructors.Queries.GetAllInstructors;
 using mucpc.Application.Instructors.Queries.GetById;
 using mucpc.Application.Instructors.Queries.GetInstructorRatingInAWorkShop;
@@ -16,6 +15,8 @@ namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Manager,Staff")]
+
 public class InstructorsController(IMediator _mediator) : ControllerBase
 {
 

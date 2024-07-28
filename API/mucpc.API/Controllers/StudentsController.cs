@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using mucpc.Application.Students.Commands.AddStudent;
 using mucpc.Application.Students.Commands.DeleteStudent;
@@ -18,6 +19,8 @@ public class StudentsController(IMediator mediator) : ControllerBase
 
     [HttpGet]
     [Route("getall")]
+    [Authorize(Roles = "Manager,Staff")]
+
     public async Task<IEnumerable<StudentDto>> GetAll()
     {
 
@@ -27,6 +30,8 @@ public class StudentsController(IMediator mediator) : ControllerBase
 
 
     [HttpGet("get")]
+    [Authorize(Roles = "Manager,Staff,Student")]
+
     public async Task<ActionResult<StudentDto>> Get([FromQuery] long studentId)
     {
         try
@@ -61,6 +66,7 @@ public class StudentsController(IMediator mediator) : ControllerBase
 
     [HttpPut]
     [Route("update")]
+    [Authorize(Roles = "Manager,Staff,Student")]
     public async Task<IActionResult> Update(UpdateStudentCommand student)
     {
 
@@ -79,6 +85,7 @@ public class StudentsController(IMediator mediator) : ControllerBase
 
     [HttpDelete]
     [Route("delete")]
+    [Authorize(Roles = "Manager,Staff")]
     public async Task<IActionResult> Delete([FromQuery] long studentId)
     {
         try
@@ -95,6 +102,7 @@ public class StudentsController(IMediator mediator) : ControllerBase
 
     [HttpGet]
     [Route("workShops")]
+    [Authorize(Roles = "Manager,Staff,Student")]
     public async Task<ActionResult<IEnumerable<WorkshopDto>>> StudentWorkShops([FromQuery] long studentId)
     {
         try

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using mucpc.Application.Forms.Commands.CreateForm;
 using mucpc.Application.Forms.Commands.DeleteForm;
@@ -18,6 +19,7 @@ namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Manager,Staff")]
 public class FormsController(Mediator _mediator) : ControllerBase
 {
     [HttpGet]
@@ -158,6 +160,8 @@ public class FormsController(Mediator _mediator) : ControllerBase
 
     [HttpGet]
     [Route("getResponse")]
+    [Authorize(Roles = "Manager,Staff,Student")]
+
     public async Task<IActionResult> GetResponse([FromQuery] long responseId)
     {
         try

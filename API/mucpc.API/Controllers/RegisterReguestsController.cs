@@ -1,8 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using mucpc.Application.AppUsers.Admins.Queries.GetAdminById;
-using mucpc.Application.Workshops.RegisterRequests;
 using mucpc.Application.Workshops.RegisterRequests.Commands.VerifyRequest;
 using mucpc.Application.Workshops.RegisterRequests.Dtos;
 using mucpc.Application.Workshops.RegisterRequests.Queries.GetAllRegisterRequests;
@@ -12,6 +10,8 @@ namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Manager,Staff")]
+
 public class RegisterReguestsController(IMediator _mediator) : ControllerBase
 {
     [HttpGet("getall")]

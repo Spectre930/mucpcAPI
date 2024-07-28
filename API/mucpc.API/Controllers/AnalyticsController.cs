@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using mucpc.Application.Analytics.Queries.GetAcademicYears;
 using mucpc.Application.Analytics.Queries.GetHighestRatedInstructor;
@@ -14,6 +15,7 @@ namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Manager")]
 public class AnalyticsController(Mediator _mediator) : ControllerBase
 {
     [HttpGet("academicYears")]

@@ -1,7 +1,7 @@
 ﻿using FilteringandPagination;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using mucpc.Application.Forms.FormResponses.Dtos;
 using mucpc.Application.Workshops.Commands.CreateWorkshop;
 using mucpc.Application.Workshops.Commands.DeleteWorkshop;
 using mucpc.Application.Workshops.Commands.EvaluateWorkshop;
@@ -16,7 +16,6 @@ using mucpc.Application.Workshops.Queries.GetRegistrationForm;
 using mucpc.Application.Workshops.Queries.GetWorkshopById;
 using mucpc.Application.Workshops.Queries.GetWorkShopRating;
 using mucpc.Application.Workshops.Queries.GetWorkshopsOfRecentSemester;
-using mucpc.Application.Workshops.RegisterRequests;
 using mucpc.Application.Workshops.RegisterRequests.Commands.AddRegisterRequest;
 using mucpc.Application.Workshops.RegisterRequests.Dtos;
 using System.Linq.Expressions;
@@ -133,6 +132,7 @@ public class WorkshopsController(IMediator mediator) : Controller
 
     [HttpPost]
     [Route("create")]
+    [Authorize(Roles = "Manager,Staff")]
     public async Task<IActionResult> Create(CreateWorkshopCommand command)
     {
         try
@@ -152,6 +152,7 @@ public class WorkshopsController(IMediator mediator) : Controller
 
     [HttpPut]
     [Route("update")]
+    [Authorize(Roles = "Manager,Staff")]
     public async Task<IActionResult> Update(UpdateWorkShopCommand command)
     {
         try
@@ -167,6 +168,7 @@ public class WorkshopsController(IMediator mediator) : Controller
 
     [HttpDelete]
     [Route("delete")]
+    [Authorize(Roles = "Manager,Staff")]
     public async Task<IActionResult> Delete([FromQuery] long workshopId)
     {
         try
@@ -183,6 +185,7 @@ public class WorkshopsController(IMediator mediator) : Controller
 
     [HttpGet]
     [Route("getRegisteredEmails")]
+    [Authorize(Roles = "Manager,Staff")]
     public async Task<IActionResult> GetRegisteredEmails([FromQuery] long workshopId)
     {
         try
@@ -198,6 +201,7 @@ public class WorkshopsController(IMediator mediator) : Controller
 
     [HttpGet]
     [Route("getWorkshopRating")]
+    [Authorize(Roles = "Manager,Staff")]
     public async Task<IActionResult> GetWorkShopRating([FromQuery] long workshopId)
     {
         try
@@ -213,6 +217,7 @@ public class WorkshopsController(IMediator mediator) : Controller
 
     [HttpGet]
     [Route("getEvaluationForm")]
+    [Authorize(Roles = "Manager,Staff,Student")]
     public async Task<IActionResult> GetEvalutionForm([FromQuery] long workshopId)
     {
         try
@@ -228,6 +233,7 @@ public class WorkshopsController(IMediator mediator) : Controller
 
     [HttpGet]
     [Route("getRegistrationForm")]
+    [Authorize(Roles = "Manager,Staff,Student")]
     public async Task<IActionResult> GetRegistrationForm([FromQuery] long workshopId)
     {
         try
@@ -243,6 +249,7 @@ public class WorkshopsController(IMediator mediator) : Controller
 
     [HttpPost]
     [Route("register")]
+    [Authorize(Roles = "Manager,Staff,Student")]
     public async Task<IActionResult> Register(AddRegisterRequestCommand command)
     {
         try
@@ -258,6 +265,7 @@ public class WorkshopsController(IMediator mediator) : Controller
 
     [HttpPost]
     [Route("evaluate")]
+    [Authorize(Roles = "Manager,Staff,Student")]
     public async Task<IActionResult> Evaluate(EvaluateWorkshopCommand command)
     {
         try
@@ -274,6 +282,7 @@ public class WorkshopsController(IMediator mediator) : Controller
 
     [HttpGet]
     [Route("getRegisterRequests")]
+    [Authorize(Roles = "Manager,Staff")]
     public async Task<ActionResult<IEnumerable<RegisterRequestDto>>> GetRegisterRequests([FromQuery] long workshopId)
     {
         try

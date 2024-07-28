@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using mucpc.Application.AppUsers.Admins.Commands.CreateAdmin;
 using mucpc.Application.AppUsers.Admins.Commands.DeleteAdmin;
@@ -11,6 +12,7 @@ namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Manager")]
 public class AdminsController(IMediator _mediator) : ControllerBase
 {
     [HttpGet]
@@ -82,6 +84,5 @@ public class AdminsController(IMediator _mediator) : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
-
 
 }

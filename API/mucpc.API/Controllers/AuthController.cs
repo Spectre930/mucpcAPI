@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using mucpc.Application.AppUsers.Commands.ChangePassword;
 using mucpc.Application.AppUsers.Commands.ResetPassword;
@@ -25,6 +26,7 @@ public class AuthController(IMediator _mediator) : ControllerBase
     }
 
     [HttpPost("changePassword")]
+    [Authorize(Roles = "Manager,Staff,Student")]
     public async Task<IActionResult> ChangePassword(ChangePasswordCommand comand)
     {
         try
@@ -39,6 +41,7 @@ public class AuthController(IMediator _mediator) : ControllerBase
     }
 
     [HttpPost("resetPassword")]
+    [Authorize(Roles = "Manager,Staff")]
     public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
     {
         try
