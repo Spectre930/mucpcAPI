@@ -1,13 +1,24 @@
 ﻿using FilteringandPagination;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using mucpc.Application.Forms;
-using mucpc.Application.Forms.Dtos;
 using mucpc.Application.Forms.FormResponses.Dtos;
-using mucpc.Application.Workshops;
+using mucpc.Application.Workshops.Commands.CreateWorkshop;
+using mucpc.Application.Workshops.Commands.DeleteWorkshop;
+using mucpc.Application.Workshops.Commands.EvaluateWorkshop;
+using mucpc.Application.Workshops.Commands.UpdateWorkShop;
 using mucpc.Application.Workshops.Dtos;
+using mucpc.Application.Workshops.Queries.GetAllWorkshops;
+using mucpc.Application.Workshops.Queries.GetByAcademicYear;
+using mucpc.Application.Workshops.Queries.GetEvaluationForm;
+using mucpc.Application.Workshops.Queries.GetRegisteredEmails;
+using mucpc.Application.Workshops.Queries.GetRegisterRequests;
+using mucpc.Application.Workshops.Queries.GetRegistrationForm;
+using mucpc.Application.Workshops.Queries.GetWorkshopById;
+using mucpc.Application.Workshops.Queries.GetWorkShopRating;
+using mucpc.Application.Workshops.Queries.GetWorkshopsOfRecentSemester;
 using mucpc.Application.Workshops.RegisterRequests;
+using mucpc.Application.Workshops.RegisterRequests.Commands.AddRegisterRequest;
 using mucpc.Application.Workshops.RegisterRequests.Dtos;
-using mucpc.Domain.Entities;
 using System.Linq.Expressions;
 using System.Text.Json;
 
@@ -15,31 +26,29 @@ namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class WorkshopsController(IWorkshopsService _workshopsService,
-    IFormService _formService,
-    IRegisterRequestsService _RRservice) : Controller
+public class WorkshopsController(IMediator mediator) : Controller
 {
 
     [HttpGet]
     [Route("getall")]
     public async Task<IEnumerable<WorkshopDto>> GetAll()
     {
-        return await _workshopsService.GetAll();
+        return await mediator.Send(new GetAllWorkshopsQuery());
     }
 
     [HttpGet]
     [Route("workshopsOfRecentSemester")]
     public async Task<IEnumerable<WorkshopDto>> GetWorkshopsOfRecentSemester()
     {
-        var workshops = await _workshopsService.GetWorkshopsOfRecentSemester();
-        return workshops;
+        return await mediator.Send(new GetWorkshopsOfRecentSemesterQuery());
+
     }
 
 
     [HttpGet]
     public async Task<IEnumerable<WorkshopDto>> Get([FromQuery] SearchParams searchParam, HttpResponse response)
     {
-        var workshops = await _workshopsService.GetAll();
+        var workshops = await mediator.Send(new GetAllWorkshopsQuery());
 
         List<ColumnFilter> columnFilters = new List<ColumnFilter>();
         if (!String.IsNullOrEmpty(searchParam.ColumnFilters))
@@ -105,28 +114,34 @@ public class WorkshopsController(IWorkshopsService _workshopsService,
     public async Task<IEnumerable<WorkshopDto>> GetByAcademicYear([FromQuery] int AcademicYear)
     {
 
-        var workshops = await _workshopsService.GetAll();
-        return workshops.Where(w => w.AcedemicYear == AcademicYear);
+        return await mediator.Send(new GetByAcademicYearQuery(AcademicYear));
     }
 
     [HttpGet("get")]
     public async Task<ActionResult<WorkshopDto>> Get([FromQuery] long workshopId)
     {
-        var workShop = await _workshopsService.GetById(workshopId);
-        return Ok(workShop);
+        try
+        {
+            var workShop = await mediator.Send(new GetWorkshopByIdQuery(workshopId));
+            return Ok(workShop);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost]
     [Route("create")]
-    public async Task<IActionResult> Create(CreateWorkshopDto dto)
+    public async Task<IActionResult> Create(CreateWorkshopCommand command)
     {
         try
         {
-            if (dto.InstructorId == 0)
+            if (command.InstructorId == 0)
             {
-                dto.InstructorId = null;
+                command.InstructorId = null;
             }
-            await _workshopsService.AddWorkShop(dto);
+            await mediator.Send(command);
             return Ok("WorkShop added Successfully");
         }
         catch (Exception ex)
@@ -137,11 +152,11 @@ public class WorkshopsController(IWorkshopsService _workshopsService,
 
     [HttpPut]
     [Route("update")]
-    public async Task<IActionResult> Update(WorkshopDto workShop)
+    public async Task<IActionResult> Update(UpdateWorkShopCommand command)
     {
         try
         {
-            await _workshopsService.UpdateWorkShop(workShop);
+            await mediator.Send(command);
             return Ok("WorkShop Updated Successfully");
         }
         catch (Exception ex)
@@ -157,7 +172,7 @@ public class WorkshopsController(IWorkshopsService _workshopsService,
         try
         {
 
-            await _workshopsService.DeleteWorkshop(workshopId);
+            await mediator.Send(new DeleteWorkshopCommand(workshopId));
             return Ok("Workshop deleted successfully!");
         }
         catch (Exception ex)
@@ -172,7 +187,7 @@ public class WorkshopsController(IWorkshopsService _workshopsService,
     {
         try
         {
-            var emails = await _workshopsService.GetRegisteredEmails(workshopId);
+            var emails = await mediator.Send(new GetRegisteredEmailsQuery(workshopId));
             return Ok(emails);
         }
         catch (Exception ex)
@@ -187,7 +202,7 @@ public class WorkshopsController(IWorkshopsService _workshopsService,
     {
         try
         {
-            var rating = await _workshopsService.GetWorkShopRating(workshopId);
+            var rating = await mediator.Send(new GetWorkShopRatingQuery(workshopId));
             return Ok(rating);
         }
         catch (Exception ex)
@@ -202,9 +217,8 @@ public class WorkshopsController(IWorkshopsService _workshopsService,
     {
         try
         {
-            var form = await _workshopsService.GetEvaluationForm(workshopId);
-            var formVm = await _formService.GetById(form.Id);
-            return Ok(formVm);
+            var form = await mediator.Send(new GetEvaluationFormQuery(workshopId));
+            return Ok(form);
         }
         catch (Exception ex)
         {
@@ -218,9 +232,8 @@ public class WorkshopsController(IWorkshopsService _workshopsService,
     {
         try
         {
-            var form = await _workshopsService.GetRegistrationForm(workshopId);
-            var formVm = await _formService.GetById(form.Id);
-            return Ok(formVm);
+            var form = await mediator.Send(new GetRegistrationFormQuery(workshopId));
+            return Ok(form);
         }
         catch (Exception ex)
         {
@@ -230,11 +243,11 @@ public class WorkshopsController(IWorkshopsService _workshopsService,
 
     [HttpPost]
     [Route("register")]
-    public async Task<IActionResult> Register(CreateRegisterRequestDto request, [FromQuery] long workshopId)
+    public async Task<IActionResult> Register(AddRegisterRequestCommand command)
     {
         try
         {
-            await _RRservice.AddRegisterRequest(request, workshopId);
+            await mediator.Send(command);
             return Ok();
         }
         catch (Exception ex)
@@ -245,11 +258,11 @@ public class WorkshopsController(IWorkshopsService _workshopsService,
 
     [HttpPost]
     [Route("evaluate")]
-    public async Task<IActionResult> Evaluate(CreateFormResponseCommand evaluation, [FromQuery] long workshopId)
+    public async Task<IActionResult> Evaluate(EvaluateWorkshopCommand command)
     {
         try
         {
-            await _workshopsService.EvaluateWorkshop(workshopId, evaluation);
+            await mediator.Send(command);
 
             return Ok();
         }
@@ -265,7 +278,7 @@ public class WorkshopsController(IWorkshopsService _workshopsService,
     {
         try
         {
-            var requests = await _workshopsService.GetRegisterRequests(workshopId);
+            var requests = await mediator.Send(new GetRegisterRequestsQuery(workshopId));
             return Ok(requests);
         }
         catch (Exception ex)

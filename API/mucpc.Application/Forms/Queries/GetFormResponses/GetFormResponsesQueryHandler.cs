@@ -11,7 +11,7 @@ public class GetFormResponsesQueryHandler(IUnitOfWork unitOfWork,
 {
     public async Task<IEnumerable<FormResponseDto>> Handle(GetFormResponsesQuery request, CancellationToken cancellationToken)
     {
-        var responses = await unitOfWork.Forms.GetFormResponses(id);
+        var responses = await unitOfWork.Forms.GetFormResponses(request.Id);
         return mapper.Map<IEnumerable<FormResponseDto>>(responses);
     }
 }

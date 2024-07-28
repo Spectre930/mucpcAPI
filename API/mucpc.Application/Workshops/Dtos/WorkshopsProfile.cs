@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using mucpc.Application.Workshops.Commands.CreateWorkshop;
 using mucpc.Application.Workshops.Commands.UpdateWorkShop;
 using mucpc.Domain.Entities;

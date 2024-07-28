@@ -1,15 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using mucpc.Application.Students;
+using mucpc.Application.Students.Commands.AddStudent;
+using mucpc.Application.Students.Commands.DeleteStudent;
+using mucpc.Application.Students.Commands.UpdateStudent;
 using mucpc.Application.Students.Dtos;
+using mucpc.Application.Students.Queries.GetAll;
+using mucpc.Application.Students.Queries.GetStudentById;
+using mucpc.Application.Students.Queries.GetStudentWorkshops;
 using mucpc.Application.Workshops.Dtos;
-using mucpc.Domain.Entities;
 
 namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class StudentsController(IStudnetsService _studentsService) : ControllerBase
+public class StudentsController(IMediator mediator) : ControllerBase
 {
 
     [HttpGet]
@@ -17,7 +21,7 @@ public class StudentsController(IStudnetsService _studentsService) : ControllerB
     public async Task<IEnumerable<StudentDto>> GetAll()
     {
 
-        return await _studentsService.GetAll();
+        return await mediator.Send(new GetAllStudentsQuery());
 
     }
 
@@ -27,7 +31,7 @@ public class StudentsController(IStudnetsService _studentsService) : ControllerB
     {
         try
         {
-            var student = await _studentsService.GetById(studentId);
+            var student = await mediator.Send(new GetStudentByIdQuery(studentId));
             return Ok(student);
         }
         catch (Exception ex)
@@ -40,12 +44,12 @@ public class StudentsController(IStudnetsService _studentsService) : ControllerB
 
     [HttpPost]
     [Route("create")]
-    public async Task<IActionResult> Create(CreateStudentDto dto)
+    public async Task<IActionResult> Create(AddStudentCommand command)
     {
         try
         {
 
-            await _studentsService.AddStudent(dto);
+            await mediator.Send(command);
             return Ok(new { message = "Student added Successfully" });
         }
         catch (Exception ex)
@@ -57,12 +61,12 @@ public class StudentsController(IStudnetsService _studentsService) : ControllerB
 
     [HttpPut]
     [Route("update")]
-    public async Task<IActionResult> Update(StudentDto student)
+    public async Task<IActionResult> Update(UpdateStudentCommand student)
     {
 
         try
         {
-            await _studentsService.UpdateStudent(student);
+            await mediator.Send(student);
             return Ok(new { message = "Student Updated Successfully" });
         }
         catch (Exception ex)
@@ -79,7 +83,7 @@ public class StudentsController(IStudnetsService _studentsService) : ControllerB
     {
         try
         {
-            await _studentsService.DeleteStudent(studentId);
+            await mediator.Send(new DeleteStudentCommand(studentId));
             return Ok();
         }
         catch (Exception ex)
@@ -95,7 +99,7 @@ public class StudentsController(IStudnetsService _studentsService) : ControllerB
     {
         try
         {
-            var workshops = await _studentsService.GetWorkshops(studentId);
+            var workshops = await mediator.Send(new GetStudentWorkshopsQuery(studentId));
             return Ok(workshops);
         }
         catch (Exception ex)

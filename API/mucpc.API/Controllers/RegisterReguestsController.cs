@@ -1,18 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using mucpc.Application.AppUsers.Admins.Queries.GetAdminById;
 using mucpc.Application.Workshops.RegisterRequests;
+using mucpc.Application.Workshops.RegisterRequests.Commands.VerifyRequest;
 using mucpc.Application.Workshops.RegisterRequests.Dtos;
+using mucpc.Application.Workshops.RegisterRequests.Queries.GetAllRegisterRequests;
+using mucpc.Application.Workshops.RegisterRequests.Queries.GetRegisterRequestById;
 
 namespace mucpc.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class RegisterReguestsController(IRegisterRequestsService _RRservice) : ControllerBase
+public class RegisterReguestsController(IMediator _mediator) : ControllerBase
 {
     [HttpGet("getall")]
     public async Task<ActionResult<IEnumerable<RegisterRequestDto>>> GetAll()
     {
-        var registerRequests = await _RRservice.GetAll();
+        var registerRequests = await _mediator.Send(new GetAllRegisterRequestsQuery());
 
         return Ok(registerRequests);
     }
@@ -22,7 +27,8 @@ public class RegisterReguestsController(IRegisterRequestsService _RRservice) : C
     {
         try
         {
-            var request = await _RRservice.GetById(requestId);
+            var query = new GetRegisterRequestByIdQuery(requestId);
+            var request = await _mediator.Send(query);
             return Ok(request);
         }
         catch (Exception ex)
@@ -37,7 +43,9 @@ public class RegisterReguestsController(IRegisterRequestsService _RRservice) : C
     {
         try
         {
-            await _RRservice.VerifyRequest(requestId, isAccepted);
+            var command = new VerifyRequestCommand(requestId, isAccepted);
+
+            await _mediator.Send(command);
             return Ok();
         }
         catch (Exception ex)
